@@ -45,7 +45,7 @@ public class TTT : MonoBehaviour
         for (int pass = 0; pass < 2; pass++)
         {
             PlayerOption check = (pass == 0) ? opponent : ai;
-            (int, int)[] corners = new (int, int)[] { (0, 0), (0, 2), (2, 0), (2, 2) };
+            (int, int)[] corners = new (int, int)[] { (0, 0), (2, 0), (0, 2), (2, 2) };
 
             // checking if board is empty
 
@@ -54,7 +54,7 @@ public class TTT : MonoBehaviour
             {
                 for (int col = 0; col < Columns; col++)
                 {
-                    if (cells[row, col].current == PlayerOption.NONE)
+                    if (cells[col, row].current == PlayerOption.NONE)
                     {
                         emptyCount++;
                     }
@@ -97,23 +97,40 @@ public class TTT : MonoBehaviour
 
                     if (corner == (0, 0))
                     {
+                        Debug.Log("corner 1");
                         allAdjacentArr[adjIndex] = (0, 1);
+                        Debug.Log("Current index: " + adjIndex);
                         allAdjacentArr[adjIndex++] = (1, 0);
+                        Debug.Log("Current index: " + adjIndex);
+                        
                     }
                     else if (corner == (0, 2))
                     {
+                       
+                        Debug.Log("corner 2");
                         allAdjacentArr[adjIndex] = (0, 1);
+                        Debug.Log("Current index: " + adjIndex);
                         allAdjacentArr[adjIndex++] = (1, 2);
+                        Debug.Log("Current index: " + adjIndex);
+
                     }
                     else if (corner == (2, 0))
                     {
+                        Debug.Log("corner 3");
                         allAdjacentArr[adjIndex] = (1, 0);
+                        Debug.Log("Current index: " + adjIndex);
                         allAdjacentArr[adjIndex++] = (2, 1);
+                        Debug.Log("Current index: " + adjIndex);
+                        
                     }
                     else if (corner == (2, 2))
                     {
+                        Debug.Log("corner 4");
                         allAdjacentArr[adjIndex] = (1, 2);
+                        Debug.Log("Current index: " + adjIndex);
                         allAdjacentArr[adjIndex++] = (2, 1);
+                        Debug.Log("Current index: " + adjIndex);
+                   
                     }
                     adjIndex++;
                     playerCount++;
@@ -129,7 +146,8 @@ public class TTT : MonoBehaviour
             {
                 if (cells[adj.Item1, adj.Item2].current == PlayerOption.NONE)
                 {
-                    adjacentArr[maxIndex++] = adj;
+                    adjacentArr[maxIndex] = adj;
+                    maxIndex++;
                     
                 }
             }
@@ -138,6 +156,7 @@ public class TTT : MonoBehaviour
             {
                 var pick = adjacentArr[Random.Range(0, maxIndex)];
                 Debug.Log("ADJACENT CELL PLACED");
+                Debug.Log("CELL: " + pick.Item1 + " " + pick.Item2);
                 ChooseSpace(pick.Item1, pick.Item2);
                 return;
             }
@@ -148,13 +167,13 @@ public class TTT : MonoBehaviour
             {
                 for (int col = 0; col < Columns; col++)
                 {
-                    if (cells[row, col].current == PlayerOption.NONE)
+                    if (cells[col, row].current == PlayerOption.NONE)
                     {
-                        cells[row, col].current = check;
+                        cells[col, row].current = check;
                         if (GetWinner() == check)
                         {
-                            cells[row, col].current = PlayerOption.NONE;
-                            ChooseSpace(row, col);
+                            cells[col, row].current = PlayerOption.NONE;
+                            ChooseSpace(col, row);
                             Debug.Log("MADE WINNING MOVED OR BLOCKED!");
                             return;
                         }
@@ -183,16 +202,13 @@ public class TTT : MonoBehaviour
 
             if(count > 0 ) // place random space here
             {
-                Debug.LogError("FAILSAFE ACTIVATED!");
+                Debug.LogError("FAILSAFE ACTIVATED");
                 var pick = open[Random.Range(0, count)];
                 ChooseSpace(pick.Item1 , pick.Item2);
                 return;
             }
           
-        }
-
-
-        
+        }   
     }
 
     public void ChooseSpace(int column, int row)
